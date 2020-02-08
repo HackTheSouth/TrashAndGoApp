@@ -22,7 +22,9 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -57,6 +59,8 @@ import java.util.Map;
 
 import android.content.Intent;
 import android.provider.MediaStore;
+
+import org.w3c.dom.Text;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnCameraMoveListener,
@@ -146,6 +150,8 @@ public class MapsActivity extends FragmentActivity implements
                 while ((reply = in.readLine()) != null) {
                     System.out.println(reply);
                 }
+
+                createDialog(40);
 
 //                for (int c; (c = in.read()) >= 0; )
 //                    System.out.print((char) c);
@@ -371,25 +377,38 @@ public class MapsActivity extends FragmentActivity implements
         return info;
     }
 
-    public AlertDialog createDialog(int pointsEarned) {
+    public void createDialog(int pointsEarned) {
 
-        LinearLayout layout = new LinearLayout(MapsActivity.this);
-        
+        LinearLayout layout = findViewById(R.id.cameradialog);
 
-        return new AlertDialog.Builder(this)
-                .setTitle(text)
-                .setMessage(text)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //Prompt the user once explanation has been shown
-                        ActivityCompat.requestPermissions(MapsActivity.this,
-                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                REQUEST_LOCATION);
-                    }
-                })
-                .create()
-                .show();
+        ImageView image =
+
+        TextView text = new TextView(MapsActivity.this);
+        text.setTextColor(Color.BLACK);
+        text.setGravity(Gravity.CENTER);
+        text.setTypeface(null, Typeface.BOLD);
+        text.setText(pointsEarned + " points earned");
+
+        layout.addView(text);
+
+        new AlertDialog.Builder(this).setView(layout).create().show();
+
+
+
+//        return new AlertDialog.Builder(this)
+//                .setTitle(text)
+//                .setMessage(text)
+//                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        //Prompt the user once explanation has been shown
+//                        ActivityCompat.requestPermissions(MapsActivity.this,
+//                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+//                                REQUEST_LOCATION);
+//                    }
+//                })
+//                .create()
+//                .show();
 
     }
 //    Points, Product name?
