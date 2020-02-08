@@ -2,6 +2,7 @@ package com.hackthesouth2020;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -15,7 +16,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.view.Gravity;
 import android.view.View;
@@ -33,7 +36,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import android.util.Base64;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +51,12 @@ public class MapsActivity extends FragmentActivity implements
         LocationListener,
         OnMapReadyCallback,
         GoogleMap.InfoWindowAdapter {
+import android.content.Intent;
+import android.view.View;
+import android.widget.ImageView;
+import android.provider.MediaStore;
+
+public class MapsActivity extends FragmentActivity implements GoogleMap.OnCameraMoveListener, OnMapReadyCallback {
 
     private GoogleMap mMap;
     private Map<LatLng,Marker> visibleBins = new HashMap<>();
@@ -49,6 +64,8 @@ public class MapsActivity extends FragmentActivity implements
     private static final int REQUEST_LOCATION = 99;
     private LocationManager locationManager;
     private String provider;
+
+    public static final int CAMERA_REQUEST = 9999;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +82,26 @@ public class MapsActivity extends FragmentActivity implements
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+    }
+
+    public void openCamera(View view) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, CAMERA_REQUEST);
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST) {
+            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+
+            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+            System.out.println("BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH ");
+            System.out.println("(" + encoded + ")");
+        }
     }
 
 
