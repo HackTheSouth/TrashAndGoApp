@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#ace8a7"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="628dp"
+        android:layout_weight="1"
+        tools:context=".MapsActivity" />
+
+    <LinearLayout
+        android:layout_width="340dp"
+        android:layout_height="65dp">
+
+        <Button
+            android:id="@+id/buttonRewardPanel"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/custombutton"
+            android:fontFamily="casual"
+            android:text="Reward Panel"
+            android:textColor="#0f0f0f"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="19dp"
+            android:layout_height="wrap_content"></LinearLayout>
+
+        <Button
+            android:id="@+id/buttonCamera"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_margin="10dp"
+            android:background="@drawable/custombutton"
+            android:fontFamily="casual"
+            android:text="Camera"
+            android:textColor="#0f0f0f"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</LinearLayout>
