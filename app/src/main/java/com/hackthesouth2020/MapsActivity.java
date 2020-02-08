@@ -381,6 +381,10 @@ public class MapsActivity extends FragmentActivity implements
         layout.setOrientation(LinearLayout.VERTICAL);
         StyleSpan bold = new StyleSpan(Typeface.BOLD);
 
+        ImageView image = new ImageView(MapsActivity.this);
+        image.setImageResource(R.drawable.nandos);
+
+
         TextView title = new TextView(MapsActivity.this);
         title.setTextColor(Color.BLACK);
         title.setGravity(Gravity.CENTER);
@@ -389,11 +393,12 @@ public class MapsActivity extends FragmentActivity implements
 
         TextView snippet = new TextView(MapsActivity.this);
         SpannableString span = new SpannableString("You earned: " + pointsEarned + " points!");
-        span.setSpan();
-        snippet.setText(span1);
+//        span.setSpan();
+        snippet.setText(span);
 
 //        Button okay
 
+        layout.addView(image);
         layout.addView(title);
         layout.addView(snippet);
 
