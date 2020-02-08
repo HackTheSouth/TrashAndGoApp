@@ -103,7 +103,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnCamera
 
             double lat = marker.getValue().getPosition().latitude, lon = marker.getValue().getPosition().longitude;
 
-            if (mMap.getCameraPosition().zoom < 12) {
+            if (mMap.getCameraPosition().zoom < 14) {
                 marker.getValue().setVisible(false);
             } else {
                 marker.getValue().setVisible(true);

@@ -14,15 +14,6 @@ public class ServerHandler {
         this.address = address;
     }
 
-//    public void postRequest(String request) throws IOException {
-//
-//        Socket socket = new Socket(address, port);
-//        PrintWriter out = new PrintWriter(socket.getOutputStream());
-//        out.print(request);
-//        Thread.sleep(1000);
-//
-//    }
-
     public String getRequest(String request) throws IOException {
 
         URL url = new URL(address + request);
