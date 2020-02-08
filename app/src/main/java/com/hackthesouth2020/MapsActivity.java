@@ -388,5 +388,4 @@ public class MapsActivity extends FragmentActivity implements
                 .show();
 
     }
-//    Points, Product name?
 }
