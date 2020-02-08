@@ -68,11 +68,13 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnCamera
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 16));
         mMap.setMinZoomPreference(10);
+//        mMap.setMyLocationEnabled(true);
+
 
 //        Get new bins from back-end, and add to the map (back-end returns .csv)
         try {
 
-//            response = (50.932280,-1.395330,30%), (50.932470,-1.395400,0%), (50.937270,-1.401370,10%)
+//            response = (50.932280,-1.395330,30%,N), (50.932470,-1.395400,0%,R), (50.937270,-1.401370,10%,R)
             String response = server.getRequest("bruhinfo"); // TODO - enter latlon
             String[] newBins = response.split(":");
 
