@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 <resources>
     <style name="Theme.Trash" parent="android:Theme">
+=======
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.TrashAndGo" parent="android:Theme">
+>>>>>>> 178154ddd31c9ea8c2a11c01d6c764e2e1544f49
         <item name="android:windowBackground">@drawable/trashandgo</item>
         <item name="android:windowNoTitle">true</item>
     </style>

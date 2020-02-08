@@ -13,17 +13,24 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -58,6 +65,9 @@ import java.util.Map;
 
 import android.content.Intent;
 import android.provider.MediaStore;
+import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnCameraMoveListener,
@@ -73,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements
     private String provider;
 
     public static final int CAMERA_REQUEST = 9999;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +154,8 @@ public class MapsActivity extends FragmentActivity implements
                     System.out.println(reply);
                 }
 
+                createDialog(40);
+
 //                for (int c; (c = in.read()) >= 0; )
 //                    System.out.print((char) c);
 
@@ -208,6 +221,7 @@ public class MapsActivity extends FragmentActivity implements
 //        Setting personal location data
         mMap.setMyLocationEnabled(true);
 
+        createDialog(40);
 
     }
 
@@ -367,26 +381,41 @@ public class MapsActivity extends FragmentActivity implements
         return info;
     }
 
-    public AlertDialog createDialog(int pointsEarned) {
+    public void createDialog(int pointsEarned) {
 
-        LinearLayout layout = new LinearLayout(MapsActivity.this);
-        
-
-        return new AlertDialog.Builder(this)
-                .setTitle(text)
-                .setMessage(text)
-                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //Prompt the user once explanation has been shown
-                        ActivityCompat.requestPermissions(MapsActivity.this,
-                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                REQUEST_LOCATION);
-                    }
-                })
-                .create()
-                .show();
-
+//        LinearLayout layout = new LinearLayout(MapsActivity.this);
+//
+//        ImageView image = (ImageView) findViewById(R.id.imageeee);
+//        image.setImageResource(R.drawable.nandos);
+//        ((ViewGroup) text.getParent()).removeView(text);
+//
+//        final TextView text = (TextView) findViewById(R.id.texttttt);
+//        text.setText("I CHANGED THE TEXT!");
+//        layout.removeView(text);
+//        ((ViewGroup) text.getParent()).removeView(text);
+//
+//        layout.addView(image);
+//        layout.addView(text);
+//
+//        new AlertDialog.Builder(this).setView(layout)
+//                .setNegativeButton("View points",
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.d(TAG, "onClick: View Points Called.");
+//                        Toast.makeText(MapsActivity.this, "Your points",Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                })
+//                .setPositiveButton(
+//                "Okay",
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        Log.d(TAG, "onClick: OK Called.");
+//                        Toast.makeText(MapsActivity.this, "Great job",Toast.LENGTH_SHORT).show();
+//                    }
+//                }).create().show();
     }
-//    Points, Product name?
+
 }
