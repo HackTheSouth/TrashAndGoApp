@@ -41,4 +41,14 @@
         app:backgroundTint="@android:color/holo_green_light"
         android:src="@android:drawable/ic_menu_camera" />
 
+    <TextView
+        android:id="@+id/texttttt"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:text="REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"/>
+
 </RelativeLayout>

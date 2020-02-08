@@ -24,6 +24,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,6 +64,7 @@ import java.util.Map;
 
 import android.content.Intent;
 import android.provider.MediaStore;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -80,6 +82,7 @@ public class MapsActivity extends FragmentActivity implements
     private String provider;
 
     public static final int CAMERA_REQUEST = 9999;
+    private static final String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,6 +219,8 @@ public class MapsActivity extends FragmentActivity implements
 
 //        Setting personal location data
         mMap.setMyLocationEnabled(true);
+
+        createDialog(40);
 
     }
 
@@ -377,32 +382,38 @@ public class MapsActivity extends FragmentActivity implements
 
     public void createDialog(int pointsEarned) {
 
-        LinearLayout layout = new LinearLayout(MapsActivity.this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        StyleSpan bold = new StyleSpan(Typeface.BOLD);
-
-        ImageView image = new ImageView(MapsActivity.this);
-        image.setImageResource(R.drawable.nandos);
-
-
-        TextView title = new TextView(MapsActivity.this);
-        title.setTextColor(Color.BLACK);
-        title.setGravity(Gravity.CENTER);
-        title.setTypeface(null, Typeface.BOLD);
-        title.setText("Great job!");
-
-        TextView snippet = new TextView(MapsActivity.this);
-        SpannableString span = new SpannableString("You earned: " + pointsEarned + " points!");
-//        span.setSpan();
-        snippet.setText(span);
-
-//        Button okay
-
-        layout.addView(image);
-        layout.addView(title);
-        layout.addView(snippet);
-
-        new AlertDialog.Builder(this).setView(layout).create().show();
-
+//        LinearLayout layout = new LinearLayout(MapsActivity.this);
+//
+////        ImageView image = (ImageView) findViewById(R.id.image1);
+////        image.setImageResource(R.drawable.nandos);
+//
+//        final TextView text = (TextView) findViewById(R.id.texttttt);
+//        text.setText("I CHANGED THE TEXT!");
+//        layout.removeView(text);
+//
+////        layout.addView(image);
+////        layout.addView(image);
+////        layout.addView(text);
+//
+//        new AlertDialog.Builder(this).setView(text)
+//                .setNegativeButton("View points",
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        Log.d(TAG, "onClick: View Points Called.");
+//                        Toast.makeText(MapsActivity.this, "Your points",Toast.LENGTH_SHORT).show();
+//
+//                    }
+//                })
+//                .setPositiveButton(
+//                "Okay",
+//                new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialogInterface, int i) {
+//                        Log.d(TAG, "onClick: OK Called.");
+//                        Toast.makeText(MapsActivity.this, "Great job",Toast.LENGTH_SHORT).show();
+//                    }
+//                }).create().show();
     }
+
 }

@@ -37,56 +37,64 @@ public class Reward extends AppCompatActivity {
             @Override
             //message = cost +
             public void onClick(View view) {
-                customDialog("Redeem Code","100TP \n £4 off meal");
+                customDialog("Redeem Code","100TP \n" +
+                        "£4 off meal");
             }
         });
 
         mButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog("Redeem Code","300TP \n 35% off on two large pizzas");
+                customDialog("Redeem Code","300TP \n" +
+                        "35% off on two large pizzas");
             }
         });
 
         mButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog("Redeem Code","800TP \n 30% off on purchase");
+                customDialog("Redeem Code","800TP \n" +
+                        "30% off on purchase");
             }
         });
 
         mButton4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog("Redeem Code","600TP \n 60% off on whey protein purchases");
+                customDialog("Redeem Code","600TP \n" +
+                        "60% off on whey protein purchases");
             }
         });
 
         mButton5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog("Redeem Code","800TP \n £10 off on purchase");
+                customDialog("Redeem Code","800TP \n" +
+                        "£10 off on purchase");
             }
         });
 
         mButton6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog("Redeem Code","1000TP \n £10 gift card");
+                customDialog("Redeem Code","1000TP \n" +
+                        "£10 gift card");
             }
         });
 
         mButton7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog("Redeem Code","500TP \n 40% off for a month");
+                customDialog("Redeem Code","500TP \n" +
+                        "40% off for a month");
             }
         });
 
         mButton8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                customDialog("Redeem Code","1500TP \n 100% off meal");
+                customDialog("Redeem Code","1500TP \n" +
+                        "100% off meal");
             }
         });
     }
