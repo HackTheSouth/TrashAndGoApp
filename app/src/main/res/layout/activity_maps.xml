@@ -49,6 +49,15 @@
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:text="REEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"/>
+        android:text="Placeholder text"/>
+
+    <ImageView
+        android:id="@+id/imageeee"
+        android:src="@drawable/nandos"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:scaleType="center"
+        android:background="#FFFFBB33"
+        android:contentDescription="@string/app_name" />
 
 </RelativeLayout>

@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -384,18 +385,19 @@ public class MapsActivity extends FragmentActivity implements
 
 //        LinearLayout layout = new LinearLayout(MapsActivity.this);
 //
-////        ImageView image = (ImageView) findViewById(R.id.image1);
-////        image.setImageResource(R.drawable.nandos);
+//        ImageView image = (ImageView) findViewById(R.id.imageeee);
+//        image.setImageResource(R.drawable.nandos);
+//        ((ViewGroup) text.getParent()).removeView(text);
 //
 //        final TextView text = (TextView) findViewById(R.id.texttttt);
 //        text.setText("I CHANGED THE TEXT!");
 //        layout.removeView(text);
+//        ((ViewGroup) text.getParent()).removeView(text);
 //
-////        layout.addView(image);
-////        layout.addView(image);
-////        layout.addView(text);
+//        layout.addView(image);
+//        layout.addView(text);
 //
-//        new AlertDialog.Builder(this).setView(text)
+//        new AlertDialog.Builder(this).setView(layout)
 //                .setNegativeButton("View points",
 //                new DialogInterface.OnClickListener() {
 //                    @Override
