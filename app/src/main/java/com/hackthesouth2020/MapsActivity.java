@@ -21,9 +21,18 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import android.util.Base64;
@@ -70,12 +79,54 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnCamera
             Bitmap bitmap = (Bitmap) data.getExtras().get("data");
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            byte[] byteArray = byteArrayOutputStream.toByteArray();
 
             String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
 
-            System.out.println("BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH BRUH ");
-            System.out.println("(" + encoded + ")");
+            //System.out.println("(" + encoded + ")");
+
+            int postDataLength = byteArray.length;
+            String request = "http://10.14.141.172:2000/trashandgo/image";
+            URL url = null;
+            try {
+                url = new URL(request);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+
+            }
+            HttpURLConnection conn = null;
+            try {
+                conn = (HttpURLConnection) url.openConnection();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                conn.setRequestMethod("POST");
+            } catch (ProtocolException e) {
+
+                e.printStackTrace();
+            }
+            conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            conn.setRequestProperty("Content-Length", String.valueOf(byteArray.length));
+            conn.setDoOutput(true);
+            try {
+                conn.getOutputStream().write(byteArray);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            Reader in = null;
+            try {
+                in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                for (int c; (c = in.read()) >= 0; )
+                    System.out.print((char) c);
+            }
+            catch(Exception e){System.out.println("dsdsdadssdadsaddasddsdsadsadsadsa");}
         }
     }
 
