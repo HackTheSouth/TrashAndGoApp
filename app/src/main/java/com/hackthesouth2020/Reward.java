@@ -17,4 +17,5 @@ public class Reward extends AppCompatActivity {
     public void backButton(View view){
         startActivity(new Intent(Reward.this, MapsActivity.class));
     }
+
 }

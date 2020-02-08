@@ -13,11 +13,28 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="1.0" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButtonRewardPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:onClick="backButton"
+        android:layout_margin="10dp"
+        app:backgroundTint="@android:color/holo_green_light"
+        android:src="?attr/actionModeCloseDrawable"
+        android:rotation="180"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.010"/>
+
     <Button
         android:id="@+id/sals"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/sals"
         android:scaleType="centerCrop"
         android:text="SALS KEBAB"
@@ -34,7 +51,7 @@
         android:id="@+id/dominos"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/dominos"
         android:scaleType="centerCrop"
         android:text="DOMINOS"
@@ -51,7 +68,7 @@
         android:id="@+id/urban_outfitters"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/urban"
         android:scaleType="centerCrop"
         android:text="URBAN OUTFITTERS"
@@ -68,7 +85,7 @@
         android:id="@+id/my_protein"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/myprotein"
         android:scaleType="centerCrop"
         android:text="MYPROTEIN"
@@ -85,7 +102,7 @@
         android:id="@+id/game"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/game"
         android:scaleType="centerCrop"
         android:text="GAME"
@@ -102,7 +119,7 @@
         android:id="@+id/apple"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/apple"
         android:scaleType="centerCrop"
         android:text="APPLE"
@@ -119,7 +136,7 @@
         android:id="@+id/puregym"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/puregym"
         android:scaleType="centerCrop"
         android:text="PUREGYM"
@@ -136,7 +153,7 @@
         android:id="@+id/nandos"
         android:layout_width="222dp"
         android:layout_height="163dp"
-        android:alpha="0.65"
+        android:alpha="0.85"
         android:background="@drawable/nandos"
         android:scaleType="centerCrop"
         android:text="NANDOS"
@@ -162,20 +179,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.036" />
 
-    <Button
-        android:id="@+id/button"
-        android:layout_width="80dp"
-        android:layout_height="55dp"
-        android:layout_alignParentRight="true"
-        android:text="Back"
-        android:background="@drawable/custombutton"
-        android:onClick="backButton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.952"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
