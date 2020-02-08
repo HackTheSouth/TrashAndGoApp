@@ -137,22 +137,22 @@ public class MapsActivity extends FragmentActivity implements
             conn.setRequestProperty("Content-Length", String.valueOf(byteArray.length));
             conn.setDoOutput(true);
             try {
-                conn.getOutputStream().write(byteArray);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
 
-            Reader in = null;
-            try {
-                in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+                conn.getOutputStream().write(byteArray);
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+
+                String reply;
+                while ((reply = in.readLine()) != null) {
+                    System.out.println(reply);
+                }
+
+//                for (int c; (c = in.read()) >= 0; )
+//                    System.out.print((char) c);
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            try {
-                for (int c; (c = in.read()) >= 0; )
-                    System.out.print((char) c);
-            }
-            catch(Exception e){System.out.println("dsdsdadssdadsaddasddsdsadsadsadsa");}
         }
     }
 
@@ -370,4 +370,27 @@ public class MapsActivity extends FragmentActivity implements
 
         return info;
     }
+
+    public AlertDialog createDialog(int pointsEarned) {
+
+        LinearLayout layout = new LinearLayout(MapsActivity.this);
+        
+
+        return new AlertDialog.Builder(this)
+                .setTitle(text)
+                .setMessage(text)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //Prompt the user once explanation has been shown
+                        ActivityCompat.requestPermissions(MapsActivity.this,
+                                new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                REQUEST_LOCATION);
+                    }
+                })
+                .create()
+                .show();
+
+    }
+//    Points, Product name?
 }
