@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -114,11 +115,6 @@ public class MapsActivity extends FragmentActivity implements
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
 
-            String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-            //System.out.println("(" + encoded + ")");
-
-            int postDataLength = byteArray.length;
             String request = "http://10.14.141.172:2000/trashandgo/image";
             URL url = null;
             try {
