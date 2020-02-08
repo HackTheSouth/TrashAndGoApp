@@ -2,7 +2,6 @@ package com.hackthesouth2020;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -16,15 +15,16 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -37,26 +37,19 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import android.util.Base64;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import android.content.Intent;
+import android.provider.MediaStore;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnCameraMoveListener,
         LocationListener,
         OnMapReadyCallback,
         GoogleMap.InfoWindowAdapter {
-import android.content.Intent;
-import android.view.View;
-import android.widget.ImageView;
-import android.provider.MediaStore;
-
-public class MapsActivity extends FragmentActivity implements GoogleMap.OnCameraMoveListener, OnMapReadyCallback {
 
     private GoogleMap mMap;
     private Map<LatLng,Marker> visibleBins = new HashMap<>();
@@ -87,6 +80,10 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnCamera
     public void openCamera(View view) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, CAMERA_REQUEST);
+    }
+
+    public void openRewardMenu(View view){
+        startActivity(new Intent(MapsActivity.this, Reward.class));
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -143,7 +140,7 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnCamera
 
                 Marker marker = mMap.addMarker(new MarkerOptions().position(coords)
                         .title(((type == 'R') ? "Recycling" : "Normal") +" bin").icon(getBinImage(full, type)));
-                marker.setSnippet(full + "," + type);//((type == 'R') ? "Recycling bin" : "Normal waste bin") + ", \n" + full + "% full.");
+                marker.setSnippet(full + "," + type);
 
                 visibleBins.put(coords, marker);
 
@@ -286,10 +283,11 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnCamera
 
         //marker snippet = "fullPercentage,type"
         int full = Integer.parseInt(marker.getSnippet().split(",")[0]);
-        String type = (marker.getSnippet().split(",")[1] == "R") ? "Recycling" : "Normal waste";
+        String type = (marker.getSnippet().split(",")[1].trim().equals("R")) ? "Recycling" : "Normal waste";
 
         LinearLayout info = new LinearLayout(MapsActivity.this);
         info.setOrientation(LinearLayout.VERTICAL);
+        StyleSpan bold = new StyleSpan(Typeface.BOLD);
 
         TextView title = new TextView(MapsActivity.this);
         title.setTextColor(Color.BLACK);
@@ -297,26 +295,23 @@ public class MapsActivity extends FragmentActivity implements GoogleMap.OnCamera
         title.setTypeface(null, Typeface.BOLD);
         title.setText(marker.getTitle());
 
-        TextView snippet = new TextView(MapsActivity.this);
-        snippet.setText();
+        TextView binSnippet = new TextView(MapsActivity.this);
+        SpannableString span1 = new SpannableString(type + " bin,");
+        ForegroundColorSpan colour1 = new ForegroundColorSpan((type.charAt(0) == 'R') ? Color.rgb(11, 122, 238) : Color.rgb(11, 111, 0));
+        span1.setSpan(colour1, 0, type.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        binSnippet.setText(span1);
 
-//        TextView snippet1 = new TextView(MapsActivity.this);
-//        snippet1.setTextColor(Color.GRAY);
-//        snippet1.setText(type + "bin, ");
-//
-//        TextView snippet2 = new TextView(MapsActivity.this);
-//        snippet2.setTextColor(Color.GREEN);
-//        snippet2.setText(full + "%");
-//
-//        TextView snippet3 = new TextView(MapsActivity.this);
-//        snippet3.setTextColor(Color.GRAY);
-//        snippet3.setText(" full");
-//        TextView s = new TextView()
+        TextView fullSnippet = new TextView(MapsActivity.this);
+        SpannableString span2 = new SpannableString(full + "% full.");
+        ForegroundColorSpan colour2 = new ForegroundColorSpan(
+                (full < 33) ? Color.rgb(15,240,15) : (full < 66) ? Color.rgb(255,153,0) : Color.rgb(255,0,0));
+        span2.setSpan(colour2, 0, String.valueOf(full).length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span2.setSpan(bold, 0, String.valueOf(full).length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        fullSnippet.setText(span2);
 
         info.addView(title);
-        info.addView(snippet);
-//        info.addView(snippet2);
-//        info.addView(snippet3);
+        info.addView(binSnippet);
+        info.addView(fullSnippet);
 
         return info;
     }
