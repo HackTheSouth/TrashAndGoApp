@@ -1,0 +1,6 @@
+<resources>
+    <style name="Theme.Trash" parent="android:Theme">
+        <item name="android:windowBackground">@drawable/trashandgo</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+</resources>
