@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".LoadingScreen">
 
-
     <Button
         android:id="@+id/button"
         android:layout_width="408dp"

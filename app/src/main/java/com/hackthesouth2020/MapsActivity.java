@@ -217,6 +217,8 @@ public class MapsActivity extends FragmentActivity implements
                 String reply;
                 while ((reply = in.readLine()) != null) { // input = barcode,name:barcode,name:
 
+                    System.out.println(reply);
+
                     if (reply.contains("error")) {
                         Toast.makeText(this, "Oops, you've already scanned this item!", Toast.LENGTH_LONG).show();
                     } else {
