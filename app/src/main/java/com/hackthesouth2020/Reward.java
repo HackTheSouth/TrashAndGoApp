@@ -3,6 +3,7 @@ package com.hackthesouth2020;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -40,6 +41,7 @@ public class Reward extends AppCompatActivity {
         mButton8 = (Button) findViewById(R.id.nandos);
 
         TextView text = (TextView) findViewById(R.id.pointtotal);
+        text.setTextColor(Color.rgb(15, 240, 15));
         text.setText("Points: " + MapsActivity.trashPoints);
 
 
@@ -47,7 +49,7 @@ public class Reward extends AppCompatActivity {
             @Override
             //message = cost +
             public void onClick(View view) {
-                customDialog("Sals £10 voucher","Redeem a £10 voucher for sals! This will cost you 100 TP.");
+                customDialog("Sals £10 voucher","Redeem a £10 voucher for sals! This will cost you 350 TP.", 350);
             }
         });
 
@@ -55,7 +57,7 @@ public class Reward extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customDialog("35% off at Dominos","Get 35% off on two large pizzas on your " +
-                        "next order from dominos! This will cost you 80 TP.");
+                        "next order from dominos! This will cost you 250 TP.", 250);
             }
         });
 
@@ -63,7 +65,7 @@ public class Reward extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customDialog("Get 30% off at Urban Outfitters","Redeem a voucher for 30% off " +
-                        "at Urban Outfitters! This will cost you 800 TP.");
+                        "at Urban Outfitters! This will cost you 800 TP.", 800);
             }
         });
 
@@ -71,7 +73,7 @@ public class Reward extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customDialog("60% off at My Protein","Get 60% off your next purchase at My " +
-                        "Protein. This will cost you 600 TP.");
+                        "Protein. This will cost you 600 TP.", 600);
             }
         });
 
@@ -79,7 +81,7 @@ public class Reward extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customDialog("£10 off at Game","Get £10 off your next purchase at Game! " +
-                        "This will cost you 400 TP.");
+                        "This will cost you 400 TP.", 400);
             }
         });
 
@@ -87,7 +89,7 @@ public class Reward extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customDialog("Get £10 off at Apple","Earn £10 off your next purchase at Apple! " +
-                        "This will cost you 400 TP.");
+                        "This will cost you 400 TP.", 400);
             }
         });
 
@@ -95,7 +97,7 @@ public class Reward extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customDialog("Get 40% off at PureGym","Get 40% off your first months membership " +
-                        "at PureGym. This will cost you 350 TP.");
+                        "at PureGym. This will cost you 350 TP.", 350);
             }
         });
 
@@ -103,22 +105,12 @@ public class Reward extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 customDialog("Get a free main course Nandos","Get any main course from Nandos for " +
-                        "free! This will cost you 750 TP.");
+                        "free! This will cost you 750 TP.", 750);
             }
         });
     }
 
-    private void cancelMethod(){
-        Log.d(TAG, "cancelMethod: Called.");
-        toastMessage("Cancelled.");
-    }
-
-    private void okMethod(){
-        Log.d(TAG, "okMethod: Called.");
-        toastMessage("Code Redeemed.");
-    }
-
-    public void customDialog(String title, String message){
+    public void customDialog(String title, String message, final int cost){
 
         if (popups == null)
             return;
@@ -135,18 +127,25 @@ public class Reward extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                Log.d(TAG, "onClick: Cancel Called.");
-                                cancelMethod();
+                                toastMessage("Maybe another day.");
 
                             }
                         })
                 .setPositiveButton(
-                        "OK",
+                        "Redeem",
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
-                                Log.d(TAG, "onClick: OK Called.");
-                                okMethod();
+
+                                if (MapsActivity.trashPoints >= cost) {
+                                    MapsActivity.trashPoints -= cost;
+                                    finish();
+                                    startActivity(getIntent());
+                                    toastMessage("Code Redeemed! Check your email for the code.");
+                                } else {
+                                    toastMessage("Sorry! You don't have enough points for this.");
+                                }
+
                             }
                         }).create().show();
     }

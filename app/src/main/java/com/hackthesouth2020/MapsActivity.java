@@ -75,7 +75,7 @@ public class MapsActivity extends FragmentActivity implements
     private static final int REQUEST_LOCATION = 99;
     private LocationManager locationManager;
     private String provider;
-    protected static int trashPoints = 0;
+    protected static int trashPoints = 400;
 
     public static final int CAMERA_REQUEST = 1;
     private static final int SCALE_RATIO = 3;
@@ -480,8 +480,10 @@ public class MapsActivity extends FragmentActivity implements
 
             if (i != namesList.size()-1)
                 names += namesList.get(i) + ", ";
-            else
+            else if (namesList.size() > 1)
                 names += "and " + namesList.get(i);
+            else
+                names += namesList.get(i);
 
         }
 
@@ -489,7 +491,6 @@ public class MapsActivity extends FragmentActivity implements
 
 
         String replyText = "Congratulations for putting your " + names + " in the trash. You earned +" + points + " trash points!";
-        trashPoints += points;
 
         if (popups == null) {
             System.err.println("ERROR: in createDialog() method, LinearLayout is null.");
@@ -502,13 +503,11 @@ public class MapsActivity extends FragmentActivity implements
 
         ProgressBar pb = null;
 
-        for (int i = 0; i < popups.getChildCount(); i++) {
-            if (popups.getChildAt(i) instanceof TextView) {
-                ((TextView) popups.getChildAt(i)).setText(replyText);
-            } else if (popups.getChildAt(i) instanceof ProgressBar) {
-                ((ProgressBar) popups.getChildAt(i)).setProgress(trashPoints);
-            }
-        }
+
+        ((TextView) popups.getChildAt(1)).setText(replyText);
+        ((ProgressBar) popups.getChildAt(2)).setProgress((trashPoints + points)/10);
+
+        trashPoints += points;
 
         new AlertDialog.Builder(this).setView(popups)
                 .setNegativeButton("View points",
