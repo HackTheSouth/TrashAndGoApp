@@ -290,7 +290,8 @@ public class MapsActivity extends FragmentActivity implements
         }
 
 //        Setting personal location data
-        mMap.setMyLocationEnabled(true);
+        if (checkLocationPermission() == true)
+            mMap.setMyLocationEnabled(true);
 
     }
 
@@ -359,10 +360,13 @@ public class MapsActivity extends FragmentActivity implements
                                 ActivityCompat.requestPermissions(MapsActivity.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                                         REQUEST_LOCATION);
+
                             }
                         })
                         .create()
                         .show();
+
+                return checkLocationPermission();
 
             } else {
 //                Request permission
