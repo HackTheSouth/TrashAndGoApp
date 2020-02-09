@@ -27,6 +27,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -327,7 +328,6 @@ public class MapsActivity extends FragmentActivity implements
 
         }
 
-
         return BitmapDescriptorFactory.fromBitmap(trash);
     }
 
@@ -439,9 +439,9 @@ public class MapsActivity extends FragmentActivity implements
         return info;
     }
 
-    public void createDialog(int pointsEarned, long barcode, String name) {
+    public void createDialog(final int pointsEarned, long barcode, String name) {
 
-        String replyText = "Congratulations for putting your " + (name.equals("Unknown Product") ? "stuff (barcode: " + barcode + ")" : name) + " in the trash, you earned " + pointsEarned + " trash points!";
+        String replyText = "Congratulations for putting your " + (name.equals("Unknown Product") ? "stuff (barcode: " + barcode + ")" : name) + " in the trash, you earned +" + pointsEarned + " trash points!";
 
         if (popups == null) {
             System.err.println("ERROR: in createDialog() method, LinearLayout is null.");
@@ -452,9 +452,13 @@ public class MapsActivity extends FragmentActivity implements
         if (popups.getParent() != null)
             ((ViewGroup) popups.getParent()).removeView(popups);
 
+        ProgressBar pb = null;
+
         for (int i = 0; i < popups.getChildCount(); i++) {
             if (popups.getChildAt(i) instanceof TextView) {
                 ((TextView) popups.getChildAt(i)).setText(replyText);
+            } else if (popups.getChildAt(i) instanceof ProgressBar) {
+                ((ProgressBar) popups.getChildAt(i)).setProgress(trashPoints);
             }
         }
 
