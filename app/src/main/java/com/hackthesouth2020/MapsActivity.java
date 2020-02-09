@@ -262,8 +262,6 @@ public class MapsActivity extends FragmentActivity implements
 //        Setting personal location data
         mMap.setMyLocationEnabled(true);
 
-        createDialog(20, 3433, "Redbull"); // TODO - testing, remove me
-
     }
 
     @Override
@@ -309,7 +307,6 @@ public class MapsActivity extends FragmentActivity implements
                         100, 100, false);
 
         }
-
 
         return BitmapDescriptorFactory.fromBitmap(trash);
     }
@@ -441,8 +438,7 @@ public class MapsActivity extends FragmentActivity implements
             if (popups.getChildAt(i) instanceof TextView) {
                 ((TextView) popups.getChildAt(i)).setText(replyText);
             } else if (popups.getChildAt(i) instanceof ProgressBar) {
-                pb = (ProgressBar) popups.getChildAt(i);
-                pb.setProgress(trashPoints);
+                ((ProgressBar) popups.getChildAt(i)).setProgress(trashPoints);
             }
         }
 
