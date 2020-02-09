@@ -7,12 +7,15 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.text.SpannableString;
@@ -24,11 +27,13 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -43,12 +48,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -66,9 +74,11 @@ public class MapsActivity extends FragmentActivity implements
     private String provider;
     protected static int trashPoints = 0;
 
-    public static final int CAMERA_REQUEST = 9999;
+    public static final int CAMERA_REQUEST = 1;
+    private static final int SCALE_RATIO = 3;
     private static final String TAG = "MainActivity";
     private LinearLayout popups;
+    private String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,9 +105,58 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     public void openCamera(View view) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, CAMERA_REQUEST);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this,
+                        "com.hackthesouth2020.fileprovider",
+                        photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+            }
+        }
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth)
+    {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+        // recreate the new Bitmap
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
+    }
+
 
     public void openRewardMenu(View view){
         startActivity(new Intent(MapsActivity.this, Reward.class));
@@ -106,7 +165,18 @@ public class MapsActivity extends FragmentActivity implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST) {
-            Bitmap bitmap = (Bitmap) data.getExtras().get("data");
+            File file = new File(mCurrentPhotoPath);
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media
+                        .getBitmap(getContentResolver(), Uri.fromFile(file));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            // Resize bitmap so it doesn't crash the app
+            bitmap = getResizedBitmap(bitmap, bitmap.getWidth() / SCALE_RATIO, bitmap.getHeight() / SCALE_RATIO);
+
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
             byte[] byteArray = byteArrayOutputStream.toByteArray();
@@ -258,7 +328,6 @@ public class MapsActivity extends FragmentActivity implements
 
         }
 
-
         return BitmapDescriptorFactory.fromBitmap(trash);
     }
 
@@ -370,9 +439,9 @@ public class MapsActivity extends FragmentActivity implements
         return info;
     }
 
-    public void createDialog(int pointsEarned, long barcode, String name) {
+    public void createDialog(final int pointsEarned, long barcode, String name) {
 
-        String replyText = "Congratulations for putting your " + (name.equals("Unknown Product") ? "stuff (barcode: " + barcode + ")" : name) + " in the trash, you earned " + pointsEarned + " trash points!";
+        String replyText = "Congratulations for putting your " + (name.equals("Unknown Product") ? "stuff (barcode: " + barcode + ")" : name) + " in the trash, you earned +" + pointsEarned + " trash points!";
 
         if (popups == null) {
             System.err.println("ERROR: in createDialog() method, LinearLayout is null.");
@@ -383,9 +452,13 @@ public class MapsActivity extends FragmentActivity implements
         if (popups.getParent() != null)
             ((ViewGroup) popups.getParent()).removeView(popups);
 
+        ProgressBar pb = null;
+
         for (int i = 0; i < popups.getChildCount(); i++) {
             if (popups.getChildAt(i) instanceof TextView) {
                 ((TextView) popups.getChildAt(i)).setText(replyText);
+            } else if (popups.getChildAt(i) instanceof ProgressBar) {
+                ((ProgressBar) popups.getChildAt(i)).setProgress(trashPoints);
             }
         }
 
