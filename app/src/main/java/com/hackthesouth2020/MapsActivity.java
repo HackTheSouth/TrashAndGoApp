@@ -51,13 +51,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapsActivity extends FragmentActivity implements
@@ -212,14 +215,21 @@ public class MapsActivity extends FragmentActivity implements
                 BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
                 String reply;
-                while ((reply = in.readLine()) != null) {
-                    long barcode = Long.parseLong(reply.split(",")[0]);
-                    String name = reply.split(",")[1].replace(":", "");
+                while ((reply = in.readLine()) != null) { // input = barcode,name:barcode,name:
+                    String[] items = reply.split(":");
+                    Map<Long, String> result = new HashMap<>();
 
-                    int points = (int) (barcode % 5) + 5;
-                    trashPoints += points;
+                    for (int i = 0; i < items.length; i++) {
+                        Long barcode = Long.parseLong(items[i].split(",")[0]);
+                        String name = items[i].split(",")[1].replace(":", "");
 
-                    createDialog(points, barcode, name);
+                        result.put(barcode, name);
+
+                    }
+
+                    System.out.println(reply);
+
+                    createDialog(result);
                 }
 
             } catch (IOException e) {
@@ -354,7 +364,6 @@ public class MapsActivity extends FragmentActivity implements
                         .create()
                         .show();
 
-
             } else {
 //                Request permission
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
@@ -439,9 +448,37 @@ public class MapsActivity extends FragmentActivity implements
         return info;
     }
 
-    public void createDialog(final int pointsEarned, long barcode, String name) {
+    public void createDialog(Map<Long, String> items) {
 
-        String replyText = "Congratulations for putting your " + (name.equals("Unknown Product") ? "stuff (barcode: " + barcode + ")" : name) + " in the trash, you earned +" + pointsEarned + " trash points!";
+        List<String> namesList = new ArrayList<>();
+        String names = "";
+        int points = 0;
+
+        for (Map.Entry<Long, String> entry : items.entrySet()) {
+
+            if (entry.getValue().equals("Unknown Product")) {
+                namesList.add("item with barcode " + entry.getKey());
+            } else {
+                namesList.add(entry.getValue());
+            }
+
+            points += (entry.getKey() % 5) + 4;
+        }
+
+        for (int i = 0; i < namesList.size(); i++) {
+
+            if (i != namesList.size()-1)
+                names += namesList.get(i) + ", ";
+            else
+                names += "and " + namesList.get(i);
+
+        }
+
+        names.substring(0, names.length()-1);
+
+
+        String replyText = "Congratulations for putting your " + names + " in the trash. You earned +" + points + " trash points!";
+        trashPoints += points;
 
         if (popups == null) {
             System.err.println("ERROR: in createDialog() method, LinearLayout is null.");

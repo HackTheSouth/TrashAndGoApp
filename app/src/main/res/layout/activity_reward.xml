@@ -190,7 +190,7 @@
             android:layout_width="400dp"
             android:layout_height="100dp"
             android:scaleType="centerCrop"
-            android:background="#FFFFBB33"
+            android:background="@android:color/holo_green_light"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
