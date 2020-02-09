@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
@@ -73,8 +74,10 @@ public class MapsActivity extends FragmentActivity implements
     protected static int trashPoints = 0;
 
     public static final int CAMERA_REQUEST = 1;
+    private static final int SCALE_RATIO = 3;
     private static final String TAG = "MainActivity";
     private LinearLayout popups;
+    private String mCurrentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,8 +125,6 @@ public class MapsActivity extends FragmentActivity implements
         }
     }
 
-    String mCurrentPhotoPath;
-
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -140,6 +141,22 @@ public class MapsActivity extends FragmentActivity implements
         return image;
     }
 
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth)
+    {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+        // recreate the new Bitmap
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
+    }
+
+
     public void openRewardMenu(View view){
         startActivity(new Intent(MapsActivity.this, Reward.class));
     }
@@ -155,6 +172,9 @@ public class MapsActivity extends FragmentActivity implements
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            // Resize bitmap so it doesn't crash the app
+            bitmap = getResizedBitmap(bitmap, bitmap.getWidth() / SCALE_RATIO, bitmap.getHeight() / SCALE_RATIO);
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
