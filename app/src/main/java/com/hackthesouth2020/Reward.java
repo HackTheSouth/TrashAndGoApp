@@ -39,6 +39,9 @@ public class Reward extends AppCompatActivity {
         mButton7 = (Button) findViewById(R.id.puregym);
         mButton8 = (Button) findViewById(R.id.nandos);
 
+        TextView text = (TextView) findViewById(R.id.pointtotal);
+        text.setText("Points: " + MapsActivity.trashPoints);
+
 
         mButton1.setOnClickListener(new View.OnClickListener() {
             @Override

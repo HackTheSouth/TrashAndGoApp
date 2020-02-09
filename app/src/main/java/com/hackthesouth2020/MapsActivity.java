@@ -216,20 +216,27 @@ public class MapsActivity extends FragmentActivity implements
 
                 String reply;
                 while ((reply = in.readLine()) != null) { // input = barcode,name:barcode,name:
-                    String[] items = reply.split(":");
-                    Map<Long, String> result = new HashMap<>();
 
-                    for (int i = 0; i < items.length; i++) {
-                        Long barcode = Long.parseLong(items[i].split(",")[0]);
-                        String name = items[i].split(",")[1].replace(":", "");
+                    if (reply.contains("error")) {
+                        Toast.makeText(this, "Oops, you've already scanned this item!", Toast.LENGTH_LONG).show();
+                    } else {
 
-                        result.put(barcode, name);
+                        String[] items = reply.split(":");
+                        Map<Long, String> result = new HashMap<>();
 
+                        for (int i = 0; i < items.length; i++) {
+                            Long barcode = Long.parseLong(items[i].split(",")[0]);
+                            String name = items[i].split(",")[1].replace(":", "");
+
+                            result.put(barcode, name);
+
+                        }
+
+                        System.out.println(reply);
+
+                        createDialog(result);
                     }
 
-                    System.out.println(reply);
-
-                    createDialog(result);
                 }
 
             } catch (IOException e) {
