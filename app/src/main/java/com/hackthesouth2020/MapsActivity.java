@@ -1,38 +1,35 @@
 package com.hackthesouth2020;
 
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentActivity;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Icon;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -46,28 +43,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.io.IOException;
-import android.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-
-import android.content.Intent;
-import android.provider.MediaStore;
-import android.widget.Toast;
-
-import org.w3c.dom.Text;
 
 public class MapsActivity extends FragmentActivity implements
         GoogleMap.OnCameraMoveListener,
@@ -81,9 +64,11 @@ public class MapsActivity extends FragmentActivity implements
     private static final int REQUEST_LOCATION = 99;
     private LocationManager locationManager;
     private String provider;
+    protected static int trashPoints = 0;
 
     public static final int CAMERA_REQUEST = 9999;
     private static final String TAG = "MainActivity";
+    private LinearLayout popups;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +80,13 @@ public class MapsActivity extends FragmentActivity implements
         StrictMode.setThreadPolicy(policy);
 
         setContentView(R.layout.activity_maps);
+
+        popups = (LinearLayout) findViewById(R.id.popup_layout);
+
+        if (popups.getParent() != null)
+            ((ViewGroup) popups.getParent()).removeView(popups);
+
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -151,13 +143,14 @@ public class MapsActivity extends FragmentActivity implements
 
                 String reply;
                 while ((reply = in.readLine()) != null) {
-                    System.out.println(reply);
+                    long barcode = Long.parseLong(reply.split(",")[0]);
+                    String name = reply.split(",")[1].replace(":", "");
+
+                    int points = (int) (barcode % 5) + 5;
+                    trashPoints += points;
+
+                    createDialog(points, barcode, name);
                 }
-
-                createDialog(40);
-
-//                for (int c; (c = in.read()) >= 0; )
-//                    System.out.print((char) c);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -207,8 +200,6 @@ public class MapsActivity extends FragmentActivity implements
                 marker.setSnippet(full + "," + type);
 
                 visibleBins.put(coords, marker);
-
-
             }
 
         } catch (IOException e) {
@@ -220,8 +211,6 @@ public class MapsActivity extends FragmentActivity implements
 
 //        Setting personal location data
         mMap.setMyLocationEnabled(true);
-
-        createDialog(40);
 
     }
 
@@ -369,9 +358,9 @@ public class MapsActivity extends FragmentActivity implements
         TextView fullSnippet = new TextView(MapsActivity.this);
         SpannableString span2 = new SpannableString(full + "% full.");
         ForegroundColorSpan colour2 = new ForegroundColorSpan(
-                (full < 33) ? Color.rgb(15,240,15) : (full < 66) ? Color.rgb(255,153,0) : Color.rgb(255,0,0));
-        span2.setSpan(colour2, 0, String.valueOf(full).length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        span2.setSpan(bold, 0, String.valueOf(full).length()+1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                (full < 33) ? Color.rgb(15, 240, 15) : (full < 66) ? Color.rgb(255, 153, 0) : Color.rgb(255, 0, 0));
+        span2.setSpan(colour2, 0, String.valueOf(full).length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        span2.setSpan(bold, 0, String.valueOf(full).length() + 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         fullSnippet.setText(span2);
 
         info.addView(title);
@@ -381,41 +370,46 @@ public class MapsActivity extends FragmentActivity implements
         return info;
     }
 
-    public void createDialog(int pointsEarned) {
+    public void createDialog(int pointsEarned, long barcode, String name) {
 
-//        LinearLayout layout = new LinearLayout(MapsActivity.this);
-//
-//        ImageView image = (ImageView) findViewById(R.id.imageeee);
-//        image.setImageResource(R.drawable.nandos);
-//        ((ViewGroup) text.getParent()).removeView(text);
-//
-//        final TextView text = (TextView) findViewById(R.id.texttttt);
-//        text.setText("I CHANGED THE TEXT!");
-//        layout.removeView(text);
-//        ((ViewGroup) text.getParent()).removeView(text);
-//
-//        layout.addView(image);
-//        layout.addView(text);
-//
-//        new AlertDialog.Builder(this).setView(layout)
-//                .setNegativeButton("View points",
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        Log.d(TAG, "onClick: View Points Called.");
-//                        Toast.makeText(MapsActivity.this, "Your points",Toast.LENGTH_SHORT).show();
-//
-//                    }
-//                })
-//                .setPositiveButton(
-//                "Okay",
-//                new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialogInterface, int i) {
-//                        Log.d(TAG, "onClick: OK Called.");
-//                        Toast.makeText(MapsActivity.this, "Great job",Toast.LENGTH_SHORT).show();
-//                    }
-//                }).create().show();
+        String replyText = "Congratulations for putting your " + (name.equals("Unknown Product") ? "stuff (barcode: " + barcode + ")" : name) + " in the trash, you earned " + pointsEarned + " trash points!";
+
+        if (popups == null) {
+            System.err.println("ERROR: in createDialog() method, LinearLayout is null.");
+            Toast.makeText(MapsActivity.this, replyText, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (popups.getParent() != null)
+            ((ViewGroup) popups.getParent()).removeView(popups);
+
+        for (int i = 0; i < popups.getChildCount(); i++) {
+            if (popups.getChildAt(i) instanceof TextView) {
+                ((TextView) popups.getChildAt(i)).setText(replyText);
+            }
+        }
+
+        new AlertDialog.Builder(this).setView(popups)
+                .setNegativeButton("View points",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(TAG, "onClick: View Points Called.");
+                        Toast.makeText(MapsActivity.this, "Your points",Toast.LENGTH_SHORT).show();
+                        openRewardMenu(popups);
+
+
+                    }
+                })
+                .setPositiveButton(
+                "Okay",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Log.d(TAG, "onClick: OK Called.");
+                        Toast.makeText(MapsActivity.this, "Great job",Toast.LENGTH_SHORT).show();
+                    }
+                }).create().show();
     }
 
 }
